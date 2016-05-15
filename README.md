@@ -6,7 +6,7 @@ Komande
 #####Login
 	> LOGIN: <username>
 #####Create game
-	> CREATE GAME:
+	> CREATE GAME
 #####Join game
 	> JOIN GAME: <game_id>
 #####Leave game
@@ -16,9 +16,9 @@ Komande
 #####Move a figure in a game room
 	> MOVE: <game_id> <from_x> <from_y> <to_x> <to_y> <eaten>
 #####Reply to a ping
-	> PONG:
+	> PONG
 #####Print all commands
-	> HELP:
+	> HELP
 
 Povratne vrednosti
 -----------
@@ -42,7 +42,7 @@ Povratne vrednosti
 	Nova poruka od igrača username.
 #####E_INVALID_ARGUMENTS
 	Argumenti komande su u lošem formatu.
-#####E_LAG
+#####E_LAG lag
 	Vreme odziva u sekundama.
 #####PING
 	PING poruka. Zahteva odgovor sa PONG komandom.

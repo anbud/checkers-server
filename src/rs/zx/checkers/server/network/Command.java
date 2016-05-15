@@ -1,5 +1,6 @@
 package rs.zx.checkers.server.network;
 
+import rs.zx.checkers.server.exceptions.GameException;
 import rs.zx.checkers.server.model.Game;
 import rs.zx.checkers.server.model.Player;
 import rs.zx.checkers.server.utils.Utils;
@@ -31,7 +32,7 @@ public enum Command {
 	    		
 	    		g.joinGame(con.getPlayer());
 	    		
-	    		con.sendMessage("E_OK");
+	    		con.sendMessage("E_OK: " + id);
     		} else {
     			con.sendMessage("E_NO_PLAYER");
     		}
@@ -41,7 +42,11 @@ public enum Command {
     	@Override
     	public void run(Connection con, String[] arguments) throws Exception {    	
     		if(con.getPlayer() != null) {
-	    		Server.getGame(arguments[0]).joinGame(con.getPlayer());
+    			try {
+    				Server.getGame(arguments[0]).joinGame(con.getPlayer());
+    			} catch(GameException e) {
+    				con.sendMessage("E_GAME_FULL");
+    			}
 	    		
 	    		con.sendMessage("E_OK");
 	    	} else {
@@ -56,6 +61,38 @@ public enum Command {
 	    		Server.getGame(arguments[0]).leaveGame(con.getPlayer());
 	    		
 	    		con.sendMessage("E_OK");
+	    	} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
+    	}
+    },
+    PRIVMSG(2) {
+    	@Override
+    	public void run(Connection con, String[] arguments) throws Exception {
+    		if(con.getPlayer() != null) {
+    			if(Server.getGame(arguments[0]) != null) {
+    				Server.sendMessage(con.getPlayer(), Server.getGame(arguments[0]), arguments[1]);
+	    		
+    				con.sendMessage("E_OK");
+    			} else {
+    				con.sendMessage("E_NO_GAME");
+    			}
+	    	} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
+    	}
+    },
+    MOVE(3) {
+    	@Override
+    	public void run(Connection con, String[] arguments) throws Exception {
+    		if(con.getPlayer() != null) {
+    			if(Server.getGame(arguments[0]) != null) {
+    				
+	    		
+    				con.sendMessage("E_OK");
+    			} else {
+    				con.sendMessage("E_NO_GAME");
+    			}
 	    	} else {
 				con.sendMessage("E_NO_PLAYER");
 			}

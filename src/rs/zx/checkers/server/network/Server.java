@@ -1,5 +1,6 @@
 package rs.zx.checkers.server.network;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import rs.zx.checkers.server.model.Game;
@@ -46,4 +47,12 @@ public class Server {
 			return false;
 		});
 	}	
+	
+	public static void sendMessage(Player p, Game g, String message) {
+		ArrayList<Player> players = g.getPlayers();
+		
+		players.stream().forEach(i -> {
+			getConnection(i).sendMessage("E_MESSAGE: " + p.getName() + " " + message);
+		});
+	}
 } 

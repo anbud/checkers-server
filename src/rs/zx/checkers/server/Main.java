@@ -10,10 +10,7 @@ public class Main {
 	public static void main(String args[]) throws IOException {
 		ServerSocket socket = new ServerSocket(1338);
 	    while(true) {
-	        Socket s = socket.accept();
-	          
-	        Connection con = new Connection(s);
-	        new Thread(con).start();
+	        new Thread(new Connection(socket.accept())).start();
 	    }
 	}
 }

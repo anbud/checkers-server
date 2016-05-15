@@ -48,12 +48,13 @@ public class Connection implements Runnable {
 	}
 	
 	private LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
+	private Timer timer = new Timer();
 	
 	@Override
 	public void run() {
 		queue.add("Welcome to " + Server.serverName + " " + Server.version + ". Please LOGIN first or type HELP for all commands.");
 		
-		new Timer().scheduleAtFixedRate(new TimerTask() {
+		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				queue.add("PING:");
@@ -100,6 +101,7 @@ public class Connection implements Runnable {
 			} catch (Exception e1) {}
 		} finally {
 			if(player != null && Server.getConnection(player) == this) {
+				timer.cancel();
 				Server.playerLeft(player);
 			}
 		}

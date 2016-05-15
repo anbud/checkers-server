@@ -34,7 +34,7 @@ public class Board {
 		int c = 0;
 		for(int i = 0; i < board.length; i++)
 			for(int j = 0; j < board[i].length; j++)
-				if(board[i][j].getFigure().getTip() == Figure.RED)
+				if(board[i][j].getFigure() != null && board[i][j].getFigure().getTip() == Figure.RED)
 					c++; //ftw
 		
 		return c;
@@ -44,7 +44,7 @@ public class Board {
 		int c = 0;
 		for(int i = 0; i < board.length; i++)
 			for(int j = 0; j < board[i].length; j++)
-				if(board[i][j].getFigure().getTip() == Figure.WOOD)
+				if(board[i][j].getFigure() != null && board[i][j].getFigure().getTip() == Figure.WOOD)
 					c++; //ftw
 		
 		return c;

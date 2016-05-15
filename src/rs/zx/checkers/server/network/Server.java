@@ -57,17 +57,19 @@ public class Server {
 			ArrayList<Player> players = g.getPlayers();
 			
 			players.stream().forEach(i -> {
-				getConnection(i).sendMessage("E_MESSAGE: " + p.getName() + " " + message);
+				getConnection(i).sendMessage("E_MESSAGE: " + (p != null ? (p.getName() + ": ") : " ") + message);
 			});
 		}
 	}
 	
 	public static void playerLeft(Player p) {
-		for(Game g : gameMap.values()) {
-			if(g.getPlayers().contains(p))
-				try {
-					g.leaveGame(p);
-				} catch(GameException e) {}//will not happen
+		synchronized(mutex) {
+			for(Game g : gameMap.values()) {
+				if(g.getPlayers().contains(p))
+					try {
+						g.leaveGame(p);
+					} catch(GameException e) {}//will not happen
+			}
 		}
 	}
 } 

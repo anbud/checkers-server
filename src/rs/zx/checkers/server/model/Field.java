@@ -7,7 +7,7 @@ public class Field implements Cloneable {
 	private Figure figure;
 	
 	public Field clone() {
-		return new Field(black, empty, new Figure(figure));
+		return new Field(black, empty, figure != null ? new Figure(figure) : null);
 	}
 	
 	public Field(boolean black) {

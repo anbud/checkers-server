@@ -95,6 +95,9 @@ public enum Command {
 						
 						try {
 							g.playMove(Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]), Integer.parseInt(arguments[3]), Integer.parseInt(arguments[4]), arguments[5].equals("true"));
+							
+							if(g.isOver())
+								Server.sendMessage(null, g, "Game is over!");
 						} catch(NumberFormatException e) {
 							con.sendMessage("E_INVALID_ARGUMENTS");
 						}

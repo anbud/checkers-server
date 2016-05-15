@@ -3,11 +3,12 @@ package rs.zx.checkers.server.model;
 import java.util.ArrayList;
 
 import rs.zx.checkers.server.exceptions.GameException;
+import rs.zx.checkers.server.network.Server;
 
 public class Game {
 	private String identifier;
 	private ArrayList<Player> players = new ArrayList<Player>();
-	private Board board;
+	private Board board = new Board();
 	private Player currentPlayer;
 	private boolean over;
 	
@@ -53,6 +54,8 @@ public class Game {
 	public void leaveGame(Player p) throws GameException {
 		if(players.contains(p))
 			over = true;
+		
+		Server.sendMessage(null, this, p.getName() + " has left the game room!");
 	}
 	
 	public void playMove(int fx, int fy, int tx, int ty, boolean eaten) {
@@ -67,6 +70,8 @@ public class Game {
 			for(int i = 0; i < iter; i++)
 				board.getXY(fx+1, fy+1).setFigure(null);
 		}
+		
+		checkState();
 	}
 	
 	public void checkState() {

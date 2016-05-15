@@ -3,6 +3,7 @@ package rs.zx.checkers.server.network;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import rs.zx.checkers.server.exceptions.GameException;
 import rs.zx.checkers.server.model.Game;
 import rs.zx.checkers.server.model.Player;
 
@@ -58,6 +59,15 @@ public class Server {
 			players.stream().forEach(i -> {
 				getConnection(i).sendMessage("E_MESSAGE: " + p.getName() + " " + message);
 			});
+		}
+	}
+	
+	public static void playerLeft(Player p) {
+		for(Game g : gameMap.values()) {
+			if(g.getPlayers().contains(p))
+				try {
+					g.leaveGame(p);
+				} catch(GameException e) {}//will not happen
 		}
 	}
 } 

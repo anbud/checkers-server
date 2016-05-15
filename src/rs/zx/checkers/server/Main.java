@@ -9,8 +9,8 @@ import rs.zx.checkers.server.network.Connection;
 public class Main {
 	public static void main(String args[]) throws IOException {
 		ServerSocket socket = new ServerSocket(1338);
-	    while(true) {
-	        new Thread(new Connection(socket.accept())).start();
-	    }
+		while(true) {
+			new Thread(new Connection(socket.accept())).start();
+		}
 	}
 }

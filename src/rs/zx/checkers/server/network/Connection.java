@@ -18,10 +18,10 @@ public class Connection implements Runnable {
 	private Player player;
 	private double lag;
 	private long ping;
-    
-    public Connection(Socket socket) {
-        this.socket = socket;
-    }
+	
+	public Connection(Socket socket) {
+		this.socket = socket;
+	}
 
 	public Player getPlayer() {
 		return player;
@@ -54,56 +54,55 @@ public class Connection implements Runnable {
 		queue.add("Welcome to " + Server.serverName + " " + Server.version + ". Please LOGIN first or type HELP for all commands.");
 		
 		new Timer().scheduleAtFixedRate(new TimerTask() {
-			  @Override
-			  public void run() {
-				  queue.add("PING:");
-				  setLastPingTime(System.currentTimeMillis());
-			  }
-			}, 15000, 15000);
+			@Override
+			public void run() {
+				queue.add("PING:");
+				setLastPingTime(System.currentTimeMillis());
+			}
+		}, 15000, 15000);
 		
 		try {
 			new Thread(() -> {
 				try {
-	                OutputStream out = socket.getOutputStream();
-	                while(!Thread.interrupted()) {
-	                    String s = queue.take();
-	                    
-	                    s = s.replace("\n", "").replace("\r", "");
-	                    s = s + "\r\n";
-	                    
-	                    out.write(s.getBytes());
-	                    out.flush();
-	                }
-	            } catch(Exception e) {	 
-	            	//Again, we lost Jim
-	            	queue.clear();
-	            	queue = null;
-	            	
-	                try {
-	                    socket.close();
-	                } catch (Exception e1) {}
-	            }
+					OutputStream out = socket.getOutputStream();
+					while(!Thread.interrupted()) {
+						String s = queue.take();
+						
+						s = s.replace("\n", "").replace("\r", "");
+						s = s + "\r\n";
+						
+						out.write(s.getBytes());
+						out.flush();
+					}
+				} catch(Exception e) {	 
+					queue.clear();
+					queue = null;
+					
+					try {
+						socket.close();
+					} catch (Exception e1) {}
+				}
 
 			}).start();
 			
-	        InputStream in = socket.getInputStream();
-	        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-	        
-	        String line;
-	        
-	        while((line = reader.readLine()) != null)
-	            process(line);
-	        
-        } catch (Exception e) {
-        	e.printStackTrace();
-            try {
-                socket.close();
-            } catch (Exception e1) {}
-        } finally {
-            if(player != null && Server.getConnection(player) == this) {
-                //we lost Jim
-            }
-        }
+			InputStream in = socket.getInputStream();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			
+			String line;
+			
+			while((line = reader.readLine()) != null)
+				process(line);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			try {
+				socket.close();
+			} catch (Exception e1) {}
+		} finally {
+			if(player != null && Server.getConnection(player) == this) {
+				Server.playerLeft(player);
+			}
+		}
 	}
 	
 	private void process(String line) throws Exception {
@@ -117,29 +116,33 @@ public class Connection implements Runnable {
 			
 			commandString = split[0];
 			
-			if(split.length > 1)			
-				arguments = split[1].trim().split(" ");
+			if(split.length > 1) {		
+				if(!commandString.equals("PRIVMSG"))
+					arguments = split[1].trim().split(" ");
+				else
+					arguments = split[1].trim().split(" ", 2);
+			}
 		}
-        
-        Command command = null;
-        
-        try {
-            command = Command.valueOf(commandString.toUpperCase().replace(" ", "_"));
-        } catch (Exception e) {
-        	sendMessage("E_COMMAND: " + commandString);
-        	return;
-        }
-        
-        if(arguments.length != command.getArgumentCount()) {
-        	sendMessage("E_ARGUMENT_COUNT: " + commandString + " " + arguments.length);
-            return;
-        }
-        
-        command.run(this, arguments);
+		
+		Command command = null;
+		
+		try {
+			command = Command.valueOf(commandString.toUpperCase().replace(" ", "_"));
+		} catch (Exception e) {
+			sendMessage("E_COMMAND: " + commandString);
+			return;
+		}
+		
+		if(arguments.length != command.getArgumentCount()) {
+			sendMessage("E_ARGUMENT_COUNT: " + commandString + " " + arguments.length);
+			return;
+		}
+		
+		command.run(this, arguments);
 	}
 	
 	public void sendMessage(String s) {
-        if(queue != null)
-        	queue.add(s);
-    }
+		if(queue != null)
+			queue.add(s);
+	}
 }

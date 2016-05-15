@@ -70,7 +70,7 @@ public class Game {
 	}
 	
 	public void checkState() {
-		over = false;
+		over = board.getRedCount() == 0 || board.getWoodCount() == 0;
 	}
 	
 	public boolean isOver() {

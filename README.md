@@ -14,7 +14,7 @@ Komande
 #####Send a message to game room
 	> PRIVMSG: <game_id> <message>
 #####Move a figure in a game room
-	> MOVE <from_x> <from_y> <to_x> <to_y> <eaten>
+	> MOVE <game_id> <from_x> <from_y> <to_x> <to_y> <eaten>
 
 Povratne vrednosti
 -----------

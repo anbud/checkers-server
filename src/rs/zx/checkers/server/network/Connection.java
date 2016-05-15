@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.io.OutputStream;
 
@@ -14,6 +16,8 @@ import rs.zx.checkers.server.model.Player;
 public class Connection implements Runnable {    
 	private Socket socket;
 	private Player player;
+	private double lag;
+	private long ping;
     
     public Connection(Socket socket) {
         this.socket = socket;
@@ -27,10 +31,36 @@ public class Connection implements Runnable {
 		this.player = player;
 	}
 	
+	public double getLag() {
+		return lag;
+	}
+
+	public void setLag(double lag) {
+		this.lag = lag;
+	}
+	
+	public long getLastPingTime() {
+		return ping;
+	}
+
+	public void setLastPingTime(long ping) {
+		this.ping = ping;
+	}
+	
 	private LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 	
 	@Override
 	public void run() {
+		queue.add("Welcome to " + Server.serverName + " " + Server.version + ". Please LOGIN first or type HELP for all commands.");
+		
+		new Timer().scheduleAtFixedRate(new TimerTask() {
+			  @Override
+			  public void run() {
+				  queue.add("PING:");
+				  setLastPingTime(System.currentTimeMillis());
+			  }
+			}, 15000, 15000);
+		
 		try {
 			new Thread(() -> {
 				try {

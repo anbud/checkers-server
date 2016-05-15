@@ -82,14 +82,27 @@ public enum Command {
 			}
     	}
     },
-    MOVE(3) {
+    MOVE(6) {
     	@Override
     	public void run(Connection con, String[] arguments) throws Exception {
     		if(con.getPlayer() != null) {
-    			if(Server.getGame(arguments[0]) != null) {
-    				
-	    		
-    				con.sendMessage("E_OK");
+    			Game g = Server.getGame(arguments[0]);
+    			Player p = con.getPlayer();
+    			
+    			if(g != null) {
+    				if(g.getCurrentPlayer() == p) {
+	    				g.changePlayer();
+	    				
+	    				try {
+	    					g.playMove(Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]), Integer.parseInt(arguments[3]), Integer.parseInt(arguments[4]), arguments[5].equals("true"));
+	    				} catch(NumberFormatException e) {
+	    					con.sendMessage("E_INVALID_ARGUMENTS");
+	    				}
+		    		
+	    				con.sendMessage("E_OK");
+    				} else {
+    					con.sendMessage("E_INVALID_MOVE");
+    				}
     			} else {
     				con.sendMessage("E_NO_GAME");
     			}
@@ -97,6 +110,20 @@ public enum Command {
 				con.sendMessage("E_NO_PLAYER");
 			}
     	}
+    },
+    PONG(0) {
+    	@Override
+        public void run(Connection con, String[] arguments) throws Exception {
+        	con.setLag((System.currentTimeMillis()-con.getLastPingTime())/1000.0);
+        	con.sendMessage("E_LAG: " + con.getLag());
+        } 
+    },
+    //for fun
+    HELP(0) {
+    	@Override
+        public void run(Connection con, String[] arguments) throws Exception {
+        	con.sendMessage("Available commands: LOGIN, PONG, CREATE GAME, JOIN GAME, LEAVE GAME, PRIVMSG, MOVE, HELP.");
+        }       
     };
     
      private int argumentCount;

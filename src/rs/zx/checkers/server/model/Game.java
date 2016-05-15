@@ -8,9 +8,8 @@ public class Game {
 	private String identifier;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private Board board;
-	public Player currentPlayer;
-	
-	public String state;
+	private Player currentPlayer;
+	private boolean over;
 	
 	public Game(String identifier) {
 		this.identifier = identifier;
@@ -42,6 +41,9 @@ public class Game {
 	}
 	
 	public void joinGame(Player p) throws GameException {
+		if(players.size() == 0)
+			currentPlayer = p;
+		
 		if(players.size() < 2)
 			players.add(p);
 		else
@@ -50,14 +52,28 @@ public class Game {
 	
 	public void leaveGame(Player p) throws GameException {
 		if(players.contains(p))
-			state = "Player " + p + " lost!";
+			over = true;
 	}
 	
-	public void move(Player p, int x, int y) {
-		//todo
+	public void playMove(int fx, int fy, int tx, int ty, boolean eaten) {
+		Field nf = board.getXY(fx, fy).clone();
+		
+		board.setXY(tx, ty, nf);
+		board.getXY(fx, fy).setFigure(null);
+		
+		if(eaten) {
+			int iter = Math.abs(fx-tx)-1;
+			
+			for(int i = 0; i < iter; i++)
+				board.getXY(fx+1, fy+1).setFigure(null);
+		}
+	}
+	
+	public void checkState() {
+		over = false;
 	}
 	
 	public boolean isOver() {
-		return false;//todo
+		return over;
 	}
 }

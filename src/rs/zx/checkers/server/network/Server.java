@@ -12,7 +12,8 @@ public class Server {
 	private static HashMap<Player, Connection> connectionMap = new HashMap<Player, Connection>();
 	private static HashMap<String, Game> gameMap = new HashMap<String, Game>();
 	
-	public static String serverName;
+	public static String serverName = "checkers-server";
+	public static String version = "0.0.5";
 	
 	public static void assignConnection(Player player, Connection con) {
 		synchronized(mutex) {
@@ -40,19 +41,23 @@ public class Server {
 	}
 	
 	public static boolean availableName(String name) {
-		return !connectionMap.keySet().stream().anyMatch(p -> {
-			if(p.getName().equalsIgnoreCase(name))
-				return true;
-			
-			return false;
-		});
+		synchronized(mutex) {
+			return !connectionMap.keySet().stream().anyMatch(p -> {
+				if(p.getName().equalsIgnoreCase(name))
+					return true;
+				
+				return false;
+			});
+		}
 	}	
 	
 	public static void sendMessage(Player p, Game g, String message) {
-		ArrayList<Player> players = g.getPlayers();
-		
-		players.stream().forEach(i -> {
-			getConnection(i).sendMessage("E_MESSAGE: " + p.getName() + " " + message);
-		});
+		synchronized(mutex) {
+			ArrayList<Player> players = g.getPlayers();
+			
+			players.stream().forEach(i -> {
+				getConnection(i).sendMessage("E_MESSAGE: " + p.getName() + " " + message);
+			});
+		}
 	}
 } 

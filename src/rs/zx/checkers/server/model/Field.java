@@ -1,13 +1,23 @@
 package rs.zx.checkers.server.model;
 
 
-public class Field {
+public class Field implements Cloneable {
 	private boolean black;
 	private boolean empty;
 	private Figure figure;
 	
+	public Field clone() {
+		return new Field(black, empty, new Figure(figure));
+	}
+	
 	public Field(boolean black) {
 		this.black = black;
+	}
+	
+	public Field(boolean black, boolean empty, Figure f) {
+		this.black = black;
+		this.empty = empty;
+		figure = f;
 	}
 
 	public boolean isBlack() {

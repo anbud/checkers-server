@@ -14,7 +14,11 @@ Komande
 #####Send a message to game room
 	> PRIVMSG: <game_id> <message>
 #####Move a figure in a game room
-	> MOVE <game_id> <from_x> <from_y> <to_x> <to_y> <eaten>
+	> MOVE: <game_id> <from_x> <from_y> <to_x> <to_y> <eaten>
+#####Reply to a ping
+	> PONG:
+#####Print all commands
+	> HELP:
 
 Povratne vrednosti
 -----------
@@ -38,3 +42,7 @@ Povratne vrednosti
 	Nova poruka od igrača username.
 #####E_INVALID_ARGUMENTS
 	Argumenti komande su u lošem formatu.
+#####E_LAG
+	Vreme odziva u sekundama.
+#####PING
+	PING poruka. Zahteva odgovor sa PONG komandom.

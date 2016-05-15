@@ -80,7 +80,7 @@ public class Connection implements Runnable {
 		String[] split = null;
 		
 		String commandString = "";
-		String[] arguments = null;
+		String[] arguments = new String[0];
 		
 		if(!line.equals("")) {
 			split = line.split(":");

@@ -16,6 +16,7 @@ public class Server {
 	public static void assignConnection(Player player, Connection con) {
 		synchronized(mutex) {
 			connectionMap.put(player, con);
+			con.setPlayer(player);
 		}
 	}
 	
@@ -39,7 +40,7 @@ public class Server {
 	
 	public static boolean availableName(String name) {
 		return !connectionMap.keySet().stream().anyMatch(p -> {
-			if(p.getName() == name)
+			if(p.getName().equalsIgnoreCase(name))
 				return true;
 			
 			return false;

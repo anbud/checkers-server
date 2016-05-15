@@ -15,38 +15,50 @@ public enum Command {
 	        	
 	        	con.sendMessage("E_OK");
         	} else {
-        		con.sendMessage("E_USERNAME");
+        		con.sendMessage("E_USERNAME_TAKEN");
         	}
         }        
     },
     CREATE_GAME(0) {
     	@Override
     	public void run(Connection con, String[] arguments) throws Exception {
-    		String id = Utils.randomId(10);
-    		
-    		Game g = new Game(id);
-    		
-    		Server.newGame(id, g);
-    		
-    		g.joinGame(con.getPlayer());
-    		
-    		con.sendMessage("E_OK");
+    		if(con.getPlayer() != null) {
+	    		String id = Utils.randomId(10);
+	    		
+	    		Game g = new Game(id);
+	    		
+	    		Server.newGame(id, g);
+	    		
+	    		g.joinGame(con.getPlayer());
+	    		
+	    		con.sendMessage("E_OK");
+    		} else {
+    			con.sendMessage("E_NO_PLAYER");
+    		}
     	}
     },
     JOIN_GAME(1) {
     	@Override
-    	public void run(Connection con, String[] arguments) throws Exception {    		
-    		Server.getGame(arguments[0]).joinGame(con.getPlayer());
-    		
-    		con.sendMessage("E_OK");
+    	public void run(Connection con, String[] arguments) throws Exception {    	
+    		if(con.getPlayer() != null) {
+	    		Server.getGame(arguments[0]).joinGame(con.getPlayer());
+	    		
+	    		con.sendMessage("E_OK");
+	    	} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
     	}
     },
     LEAVE_GAME(1) {
     	@Override
-    	public void run(Connection con, String[] arguments) throws Exception {    		
-    		Server.getGame(arguments[0]).leaveGame(con.getPlayer());
-    		
-    		con.sendMessage("E_OK");
+    	public void run(Connection con, String[] arguments) throws Exception {    	
+    		if(con.getPlayer() != null) {
+	    		Server.getGame(arguments[0]).leaveGame(con.getPlayer());
+	    		
+	    		con.sendMessage("E_OK");
+	    	} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
     	}
     };
     

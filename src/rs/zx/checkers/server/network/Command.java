@@ -1,7 +1,5 @@
 package rs.zx.checkers.server.network;
 
-import java.io.Serializable;
-
 import rs.zx.checkers.server.exceptions.GameException;
 import rs.zx.checkers.server.model.Game;
 import rs.zx.checkers.server.model.Player;
@@ -141,7 +139,6 @@ public enum Command {
 		public void run(Connection con, String[] arguments) throws Exception {
 			if(con.getPlayer() != null) {
 				Game g = Server.getGame(arguments[0]);
-				Player p = con.getPlayer();
 				 
 				if(g != null) {
 					con.sendMessage("E_STATE:");

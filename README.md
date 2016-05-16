@@ -17,6 +17,10 @@ Komande
 	> MOVE: <game_id> <from_x> <from_y> <to_x> <to_y> <eaten>
 #####Reply to a ping
 	> PONG
+#####Print all connected users
+	> USERS
+#####Get serialized current state of a game
+	> STATE: <game_id>
 #####Print all commands
 	> HELP
 
@@ -38,11 +42,17 @@ Povratne vrednosti
 	Igrač nije ulogovan. (pre bilo koje komande treba uraditi LOGIN: <ime>).
 #####E_NO_GAME
 	Igra sa datim id-em ne postoji.
-#####E_MESSAGE username message
+#####E_MESSAGE: username message
 	Nova poruka od igrača username.
 #####E_INVALID_ARGUMENTS
 	Argumenti komande su u lošem formatu.
-#####E_LAG lag
+#####E_LAG: lag
 	Vreme odziva u sekundama.
+#####E_COMMANDS: commands
+	Lista svih dostupnih komandi.
+#####E_USERS: users
+	Lista svih konektovanih korisnika.
+#####E_STATE: state
+	Serijalizovan objekat sa trenutnim stanjem igre u Base64 formatu.
 #####PING
 	PING poruka. Zahteva odgovor sa PONG komandom.

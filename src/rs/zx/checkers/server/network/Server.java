@@ -2,6 +2,7 @@ package rs.zx.checkers.server.network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import rs.zx.checkers.server.exceptions.GameException;
 import rs.zx.checkers.server.model.Game;
@@ -38,6 +39,12 @@ public class Server {
 	public static Connection getConnection(Player p) {
 		synchronized(mutex) {
 			return connectionMap.get(p);
+		}
+	}
+	
+	public static Set<Player> getPlayers() {
+		synchronized(mutex) {
+			return connectionMap.keySet();
 		}
 	}
 	

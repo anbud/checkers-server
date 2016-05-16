@@ -1,5 +1,7 @@
 package rs.zx.checkers.server.network;
 
+import java.io.Serializable;
+
 import rs.zx.checkers.server.exceptions.GameException;
 import rs.zx.checkers.server.model.Game;
 import rs.zx.checkers.server.model.Player;
@@ -122,8 +124,33 @@ public enum Command {
 	HELP(0) {
 		@Override
 		public void run(Connection con, String[] arguments) throws Exception {
-			con.sendMessage("Available commands: LOGIN, PONG, CREATE GAME, JOIN GAME, LEAVE GAME, PRIVMSG, MOVE, HELP.");
+			con.sendMessage("E_COMMANDS:\r\nLOGIN\r\nPONG\r\nCREATE GAME\r\nJOIN GAME\r\nLEAVE GAME\r\nPRIVMSG\r\nMOVE\r\nUSERS\r\nHELP");
 		}		 
+	},
+	USERS(0) {
+		@Override
+		public void run(Connection con, String[] arguments) throws Exception {
+			con.sendMessage("E_USERS:");
+			for(Player p : Server.getPlayers())
+				con.sendMessage(p.getName());
+			
+		}		 
+	},
+	STATE(1) {
+		@Override
+		public void run(Connection con, String[] arguments) throws Exception {
+			if(con.getPlayer() != null) {
+				Game g = Server.getGame(arguments[0]);
+				Player p = con.getPlayer();
+				 
+				if(g != null) {
+					con.sendMessage("E_STATE:");
+					con.sendMessage(Utils.toString(g));
+				} else 
+					con.sendMessage("E_NO_GAME");				
+			} else
+				con.sendMessage("E_NO_PLAYER");
+		}
 	};
 
 	private int argumentCount;

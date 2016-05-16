@@ -57,7 +57,7 @@ public class Connection implements Runnable {
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				queue.add("PING:");
+				queue.add("PING");
 				setLastPingTime(System.currentTimeMillis());
 			}
 		}, 15000, 15000);
@@ -69,7 +69,6 @@ public class Connection implements Runnable {
 					while(!Thread.interrupted()) {
 						String s = queue.take();
 						
-						s = s.replace("\n", "").replace("\r", "");
 						s = s + "\r\n";
 						
 						out.write(s.getBytes());

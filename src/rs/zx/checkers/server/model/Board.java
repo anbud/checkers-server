@@ -1,8 +1,10 @@
 package rs.zx.checkers.server.model;
 
-import java.util.Arrays;
+import java.io.Serializable;
 
-public class Board {
+public class Board implements Serializable {
+	private static final long serialVersionUID = 6016216434680733621L;
+	
 	private Field[][] board;
 	
 	public Board() {

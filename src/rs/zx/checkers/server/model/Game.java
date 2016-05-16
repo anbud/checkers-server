@@ -1,11 +1,14 @@
 package rs.zx.checkers.server.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import rs.zx.checkers.server.exceptions.GameException;
 import rs.zx.checkers.server.network.Server;
 
-public class Game {
+public class Game implements Serializable {
+	private static final long serialVersionUID = -8027592139480577678L;
+	
 	private String identifier;
 	private ArrayList<Player> players = new ArrayList<Player>();
 	private Board board = new Board();

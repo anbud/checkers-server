@@ -1,6 +1,10 @@
 package rs.zx.checkers.server.model;
 
-public class Player {
+import java.io.Serializable;
+
+public class Player implements Serializable {
+	private static final long serialVersionUID = 231122823906651732L;
+	
 	private String id;
 	private String name;
 	

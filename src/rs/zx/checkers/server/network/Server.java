@@ -49,6 +49,19 @@ public class Server {
 		}
 	}
 	
+	public static Player getPlayer(String name) {
+		synchronized(mutex) {
+			Player[] p = connectionMap.keySet().stream().filter(i -> {
+				return i.getName().equalsIgnoreCase(name);
+			}).toArray(Player[]::new);
+			
+			if(p.length > 0)
+				return p[0];
+			else
+				return null;
+		}
+	}
+	
 	public static Set<String> getGames() {
 		synchronized(mutex) {
 			return gameMap.keySet();
@@ -134,6 +147,12 @@ public class Server {
 					Command.valueOf("GAMES").run(i);
 				} catch (Exception e) {}
 			});
+		}
+	}
+	
+	public static boolean freeUser(Player p) {
+		synchronized(mutex) {
+			return Server.getPlayerGame(p) == null;
 		}
 	}
 } 

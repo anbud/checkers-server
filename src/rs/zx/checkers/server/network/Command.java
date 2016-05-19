@@ -20,19 +20,11 @@ public enum Command {
 			}
 		}			
 	},
-	CREATE_GAME(0) {
+	/*CREATE_GAME(0) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
 			if(con.getPlayer() != null) {
-				String id = Utils.randomId(10);
-			
-				Game g = new Game(id);
-			
-				Server.newGame(id, g);
-			 
-				g.joinGame(con.getPlayer());
-
-				con.sendMessage("E_OK: " + id);
+				
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}
@@ -49,6 +41,71 @@ public enum Command {
 				}
 				
 				con.sendMessage("E_OK");
+			} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
+		}
+	},*/
+	GAME_REQUEST(1) {
+		@Override
+		public void run(Connection con, String... arguments) throws Exception {	 	
+			if(con.getPlayer() != null) {
+				Player p = Server.getPlayer(arguments[0]);
+				
+				if(p != null) {
+					Connection c = Server.getConnection(p);
+					c.sendMessage("E_GAME_REQUEST: " + con.getPlayer().getName());
+					
+					con.sendMessage("E_OK");
+				} else {
+					con.sendMessage("E_NO_PLAYER");
+				}
+			} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
+		}
+	},
+	GAME_ACCEPT(1) {
+		@Override
+		public void run(Connection con, String... arguments) throws Exception {	 	
+			if(con.getPlayer() != null) {
+				Player p = Server.getPlayer(arguments[0]);
+				
+				if(p != null && Server.freeUser(p)) {
+					Connection c = Server.getConnection(p);
+					
+					String id = Utils.randomId(10);
+					
+					Game g = new Game(id);
+				
+					Server.newGame(id, g);
+					
+					g.joinGame(p);
+					g.joinGame(con.getPlayer());
+					
+					c.sendMessage("E_GAME_ACCEPTED: " + con.getPlayer().getName());
+					con.sendMessage("E_OK: " + id);
+				} else {
+					con.sendMessage("E_NO_PLAYER");
+				}
+			} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
+		}
+	},
+	GAME_DECLINE(1) {
+		@Override
+		public void run(Connection con, String... arguments) throws Exception {	 	
+			if(con.getPlayer() != null) {
+				Player p = Server.getPlayer(arguments[0]);
+				
+				if(p != null) {
+					Connection c = Server.getConnection(p);
+					
+					c.sendMessage("E_GAME_DECLINED: " + con.getPlayer().getName());
+				} else {
+					con.sendMessage("E_NO_PLAYER");
+				}
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}

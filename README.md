@@ -5,22 +5,22 @@ Komande
 ----------------
 #####Login
 	> LOGIN: <username>
-#####Create game
-	> CREATE GAME
-#####Join game
-	> JOIN GAME: <game_id>
 #####Leave game
 	> LEAVE GAME: <game_id>
 #####Send a message to game room
-	> PRIVMSG: <game_id> <message>
+	> GAMEMSG: <message>
+#####Send a message to lobby
+	> LOBBYMSG: <message>
 #####Move a figure in a game room
 	> MOVE: <game_id> <from_x> <from_y> <to_x> <to_y> <eaten>
 #####Reply to a ping
 	> PONG
 #####Print all connected users
 	> USERS
-#####Get serialized current state of a game
-	> STATE: <game_id>
+#####Print all available users
+	> FREE USERS
+#####Print all active game
+	> GAMES
 #####Print all commands
 	> HELP
 
@@ -44,6 +44,16 @@ Povratne vrednosti
 	Igra sa datim id-em ne postoji.
 #####E_MESSAGE: username message
 	Nova poruka od igrača username.
+#####E_INFO: message
+	Informativna poruka.
+#####E_LOBBY_MESSAGE: username message
+	Nova poruka od igrača username u lobby-u.
+#####E_LOBBY_INFO: message
+	Informativna poruka u lobby-u.
+#####E_GAME_STARTED
+	Dva igrača su konektovana, igra je počela.
+#####E_GAME_OVER
+	Igra je gotova.
 #####E_INVALID_ARGUMENTS
 	Argumenti komande su u lošem formatu.
 #####E_LAG: lag

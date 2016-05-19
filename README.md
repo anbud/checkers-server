@@ -7,6 +7,12 @@ Komande
 	> LOGIN: <username>
 #####Leave game
 	> LEAVE GAME: <game_id>
+#####Send a game request
+	> GAME REQUEST: <username>
+#####Accept a game request
+	> GAME ACCEPT: <inviter_username>
+#####Decline a game request
+	> GAME DECLINE: <inviter_username>
 #####Send a message to game room
 	> GAMEMSG: <message>
 #####Send a message to lobby
@@ -54,6 +60,12 @@ Povratne vrednosti
 	Dva igrača su konektovana, igra je počela.
 #####E_GAME_OVER
 	Igra je gotova.
+#####E_GAME_ACCEPTED: username
+	Username je prihvatio poziv za igru.
+#####E_GAME_DECLINED: username
+	Username je odbio poziv za igru.
+#####E_GAME_REQUEST: inviter
+	Inviter je poslao poziv za novu igru.
 #####E_INVALID_ARGUMENTS
 	Argumenti komande su u lošem formatu.
 #####E_LAG: lag

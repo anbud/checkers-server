@@ -48,17 +48,32 @@ public class Game implements Serializable {
 		if(players.size() == 0)
 			currentPlayer = p;
 		
-		if(players.size() < 2)
+		if(players.size() < 2) {
 			players.add(p);
-		else
+			Server.broadcastUsers();
+			Server.sendMessage(null, this, p.getName() + " has joined the game room!");
+		} else
 			throw new GameException("Game " + identifier + " has no room for more players!");
+		
+		if(players.size() == 2) {
+			Server.sendMessage(null, this, "Game has started.");
+			Server.sendGameEvent(this, "E_GAME_STARTED");
+			
+			Server.broadcastGames();
+		}
 	}
 	
 	public void leaveGame(Player p) throws GameException {
-		if(players.contains(p))
+		if(players.contains(p)) {
 			over = true;
+			
+			players.remove(p);
 		
-		Server.sendMessage(null, this, p.getName() + " has left the game room!");
+			Server.sendMessage(null, this, p.getName() + " has left the game room!");
+			Server.sendGameEvent(this, "E_GAME_OVER");
+			
+			Server.broadcastUsers();
+		}
 	}
 	
 	public void playMove(int fx, int fy, int tx, int ty, boolean eaten) {
@@ -79,6 +94,8 @@ public class Game implements Serializable {
 	
 	public void checkState() {
 		over = board.getRedCount() == 0 || board.getWoodCount() == 0;
+		if(over)
+			Server.sendGameEvent(this, "E_GAME_OVER");
 	}
 	
 	public boolean isOver() {

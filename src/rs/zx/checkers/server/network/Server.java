@@ -1,6 +1,7 @@
 package rs.zx.checkers.server.network;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -48,6 +49,12 @@ public class Server {
 		}
 	}
 	
+	public static Set<String> getGames() {
+		synchronized(mutex) {
+			return gameMap.keySet();
+		}
+	}
+	
 	public static boolean availableName(String name) {
 		synchronized(mutex) {
 			return !connectionMap.keySet().stream().anyMatch(p -> {
@@ -59,12 +66,42 @@ public class Server {
 		}
 	}	
 	
+	public static Game getPlayerGame(Player p) {
+		synchronized(mutex) {
+			Game[] g = gameMap.values().stream().filter(i -> {
+				return i.getPlayers().contains(p);
+			}).toArray(Game[]::new);
+			
+			return g.length > 0 ? g[0] : null;
+		}
+	}
+	
+	public static void sendMessage(Player p, String message) {
+		synchronized(mutex) {
+			Set<Player> players = connectionMap.keySet();
+			
+			players.stream().forEach(i -> {
+				getConnection(i).sendMessage((p == null ? "E_LOBBY_INFO: " : "E_LOBBY_MESSAGE: ") + (p != null ? (p.getName() + ": ") : " ") + message);
+			});
+		}
+	}
+	
 	public static void sendMessage(Player p, Game g, String message) {
 		synchronized(mutex) {
 			ArrayList<Player> players = g.getPlayers();
 			
 			players.stream().forEach(i -> {
-				getConnection(i).sendMessage("E_MESSAGE: " + (p != null ? (p.getName() + ": ") : " ") + message);
+				getConnection(i).sendMessage((p == null ? "E_INFO: " : "E_MESSAGE: ") + (p != null ? (p.getName() + ": ") : " ") + message);
+			});
+		}
+	}
+	
+	public static void sendGameEvent(Game g, String event, String... args) {
+		synchronized(mutex) {
+			ArrayList<Player> players = g.getPlayers();
+			
+			players.stream().forEach(i -> {
+				getConnection(i).sendMessage(event + (args.length == 0 ? "" : ": " + Arrays.toString(args).replaceAll("(?:\\[|\\]|,)", "")));
 			});
 		}
 	}
@@ -79,4 +116,25 @@ public class Server {
 			}
 		}
 	}
+	
+	public static void broadcastUsers() {
+		synchronized(mutex) {
+			connectionMap.values().stream().forEach(i -> {
+				try {
+					Command.valueOf("FREE_USERS").run(i);
+				} catch (Exception e) {}
+			});
+		}
+	}
+	
+	public static void broadcastGames() {
+		synchronized(mutex) {
+			connectionMap.values().stream().forEach(i -> {
+				try {
+					Command.valueOf("GAMES").run(i);
+				} catch (Exception e) {}
+			});
+		}
+	}
 } 
+ 

@@ -18,9 +18,11 @@ Komande
 #####Send a message to lobby
 	> LOBBYMSG: <message>
 #####Move a figure in a game room
-	> MOVE: <game_id> <from_x> <from_y> <to_x> <to_y> <eaten>
+	> MOVE: <from_x> <from_y> <to_x> <to_y> <eaten>
 #####Reply to a ping
 	> PONG
+#####End your turn
+	> END TURN
 #####Print all connected users
 	> USERS
 #####Print all available users
@@ -56,6 +58,8 @@ Povratne vrednosti
 	Nova poruka od igrača username u lobby-u.
 #####E_LOBBY_INFO: message
 	Informativna poruka u lobby-u.
+#####E_TURN: username
+	Trenutno je igrač username na redu.
 #####E_GAME_STARTED
 	Dva igrača su konektovana, igra je počela.
 #####E_GAME_OVER

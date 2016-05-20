@@ -1,6 +1,8 @@
 Checkers Server
 =============
 
+_Live instance running at hekate.zx.rs:1338_
+
 Komande
 ----------------
 #####Login

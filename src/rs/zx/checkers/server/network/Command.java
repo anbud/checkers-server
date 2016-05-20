@@ -1,6 +1,5 @@
 package rs.zx.checkers.server.network;
 
-import rs.zx.checkers.server.exceptions.GameException;
 import rs.zx.checkers.server.model.Game;
 import rs.zx.checkers.server.model.Player;
 import rs.zx.checkers.server.utils.Utils;
@@ -20,32 +19,6 @@ public enum Command {
 			}
 		}			
 	},
-	/*CREATE_GAME(0) {
-		@Override
-		public void run(Connection con, String... arguments) throws Exception {
-			if(con.getPlayer() != null) {
-				
-			} else {
-				con.sendMessage("E_NO_PLAYER");
-			}
-		}
-	},
-	JOIN_GAME(1) {
-		@Override
-		public void run(Connection con, String... arguments) throws Exception {	 	
-			if(con.getPlayer() != null) {
-				try {
-					Server.getGame(arguments[0]).joinGame(con.getPlayer());
-				} catch(GameException e) {
-					con.sendMessage("E_GAME_FULL");
-				}
-				
-				con.sendMessage("E_OK");
-			} else {
-				con.sendMessage("E_NO_PLAYER");
-			}
-		}
-	},*/
 	GAME_REQUEST(1) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {	 	
@@ -152,19 +125,17 @@ public enum Command {
 			}
 		}
 	},
-	MOVE(6) {
+	MOVE(5) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
 			if(con.getPlayer() != null) {
-				Game g = Server.getGame(arguments[0]);
+				Game g = Server.getPlayerGame(con.getPlayer());
 				Player p = con.getPlayer();
 				 
 				if(g != null) {
-					if(g.getCurrentPlayer() == p) {
-						g.changePlayer();
-						
+					if(g.getCurrentPlayer() == p) {						
 						try {
-							g.playMove(Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]), Integer.parseInt(arguments[3]), Integer.parseInt(arguments[4]), arguments[5].equals("true"));
+							g.playMove(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]), Integer.parseInt(arguments[3]), arguments[4].equals("true"));
 							
 							Server.sendGameEvent(g, "E_MOVE", arguments);
 							
@@ -173,6 +144,28 @@ public enum Command {
 						} catch(NumberFormatException e) {
 							con.sendMessage("E_INVALID_ARGUMENTS");
 						}
+
+						con.sendMessage("E_OK");
+					} else 
+						con.sendMessage("E_INVALID_MOVE");					
+				} else 
+					con.sendMessage("E_NO_GAME");				
+			} else
+				con.sendMessage("E_NO_PLAYER");
+		}
+	},
+	END_TURN(0) {
+		@Override
+		public void run(Connection con, String... arguments) throws Exception {
+			if(con.getPlayer() != null) {
+				Game g = Server.getPlayerGame(con.getPlayer());
+				Player p = con.getPlayer();
+				 
+				if(g != null) {
+					if(g.getCurrentPlayer() == p) {
+						g.changePlayer();
+						
+						Server.sendGameEvent(g, "E_TURN", g.getCurrentPlayer().getName());
 
 						con.sendMessage("E_OK");
 					} else 

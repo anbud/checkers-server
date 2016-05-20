@@ -187,7 +187,7 @@ public enum Command {
 	HELP(0) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
-			con.sendMessage("E_COMMANDS:\r\nLOGIN\r\nPONG\r\nCREATE GAME\r\nJOIN GAME\r\nLEAVE GAME\r\nPRIVMSG\r\nMOVE\r\nUSERS\r\nHELP");
+			con.sendMessage("E_COMMANDS:\r\nLOGIN: <username>\r\nPONG\r\nGAME REQUEST: <username>\r\nGAME ACCEPT: <username>\r\nGAME DECLINE: <username>\r\nLEAVE GAME\r\nGAMEMSG: <message>\r\nLOBBYMSG: <message>\r\nMOVE: <from_x> <from_y> <to_x> <to_y> <eaten>\r\nEND TURN\r\nUSERS\r\nFREE USERS\r\nGAMES\r\nHELP");
 		}		 
 	},
 	USERS(0) {

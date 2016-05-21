@@ -108,7 +108,7 @@ public class Connection implements Runnable {
 		String[] split = null;
 		
 		String commandString = "";
-		String[] arguments = new String[1];
+		String[] arguments = new String[0];
 		
 		if(!line.equals("")) {
 			split = line.split(":");
@@ -118,8 +118,9 @@ public class Connection implements Runnable {
 			if(split.length > 1) {		
 				if(!commandString.equals("GAMEMSG") && !commandString.equals("LOBBYMSG"))
 					arguments = split[1].trim().split(" ");
-				else
-					arguments[0] = split[1].trim();
+				else {
+					arguments = new String[]{split[1].trim()};
+				}
 			}
 		}
 		

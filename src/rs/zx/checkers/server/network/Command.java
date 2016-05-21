@@ -1,5 +1,7 @@
 package rs.zx.checkers.server.network;
 
+import java.util.ArrayList;
+
 import rs.zx.checkers.server.model.Game;
 import rs.zx.checkers.server.model.Player;
 import rs.zx.checkers.server.utils.Utils;
@@ -14,6 +16,8 @@ public enum Command {
 				Server.assignConnection(p, con);
 
 				con.sendMessage("E_OK");
+				
+				Server.broadcastUsers();
 			} else {
 				con.sendMessage("E_USERNAME_TAKEN");
 			}
@@ -58,6 +62,8 @@ public enum Command {
 					
 					c.sendMessage("E_GAME_ACCEPTED: " + con.getPlayer().getName());
 					con.sendMessage("E_OK: " + id);
+					
+					Server.broadcastGames();
 				} else {
 					con.sendMessage("E_NO_PLAYER");
 				}
@@ -91,6 +97,8 @@ public enum Command {
 				Server.getGame(arguments[0]).leaveGame(con.getPlayer());
 			
 				con.sendMessage("E_OK");
+				
+				Server.broadcastGames();
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}
@@ -125,7 +133,7 @@ public enum Command {
 			}
 		}
 	},
-	MOVE(5) {
+	MOVE(4) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
 			if(con.getPlayer() != null) {
@@ -135,9 +143,38 @@ public enum Command {
 				if(g != null) {
 					if(g.getCurrentPlayer() == p) {						
 						try {
-							g.playMove(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]), Integer.parseInt(arguments[3]), arguments[4].equals("true"));
+							g.playMove(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]), Integer.parseInt(arguments[3]));
 							
 							Server.sendGameEvent(g, "E_MOVE", arguments);
+							
+							if(g.isOver())
+								Server.sendMessage(null, g, "Game is over!");
+						} catch(NumberFormatException e) {
+							con.sendMessage("E_INVALID_ARGUMENTS");
+						}
+
+						con.sendMessage("E_OK");
+					} else 
+						con.sendMessage("E_INVALID_MOVE");					
+				} else 
+					con.sendMessage("E_NO_GAME");				
+			} else
+				con.sendMessage("E_NO_PLAYER");
+		}
+	},
+	EAT(2) {
+		@Override
+		public void run(Connection con, String... arguments) throws Exception {
+			if(con.getPlayer() != null) {
+				Game g = Server.getPlayerGame(con.getPlayer());
+				Player p = con.getPlayer();
+				 
+				if(g != null) {
+					if(g.getCurrentPlayer() == p) {						
+						try {
+							g.playEat(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
+							
+							Server.sendGameEvent(g, "E_EAT", arguments);
 							
 							if(g.isOver())
 								Server.sendMessage(null, g, "Game is over!");
@@ -214,7 +251,25 @@ public enum Command {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
 			con.sendMessage("E_GAMES:");
-			Server.getGames().stream().forEach(con::sendMessage);
+			Server.getGames().stream().forEach(i -> {
+				ArrayList<Player> p = i.getPlayers();
+				con.sendMessage(p.get(0).getName() + " " + p.get(1).getName());
+			});
+		}		 
+	},
+	GAME_OVER(0) {
+		@Override
+		public void run(Connection con, String... arguments) throws Exception {
+			if(con.getPlayer() != null) {
+				Game g = Server.getPlayerGame(con.getPlayer());
+				Player p = con.getPlayer();
+				 
+				if(g != null) {
+					g.setOver(true);				
+				} else 
+					con.sendMessage("E_NO_GAME");				
+			} else
+				con.sendMessage("E_NO_PLAYER");
 		}		 
 	},
 	STATE(1) {

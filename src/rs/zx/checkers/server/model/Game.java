@@ -76,24 +76,28 @@ public class Game implements Serializable {
 		}
 	}
 	
-	public void playMove(int fx, int fy, int tx, int ty, boolean eaten) {
+	public void playMove(int fx, int fy, int tx, int ty, int... et) {
 		Field nf = board.getXY(fx, fy).clone();
 		
 		board.setXY(tx, ty, nf);
 		board.getXY(fx, fy).setFigure(null);
 		
-		if(eaten) {
-			int iter = Math.abs(fx-tx)-1;
-			
-			for(int i = 0; i < iter; i++)
-				board.getXY(fx+1, fy+1).setFigure(null);
-		}
-		
 		checkState();
+	}
+	
+	public void playEat(int x, int y) {
+		board.getXY(x, y).setFigure(null);
 	}
 	
 	public void checkState() {
 		over = board.getRedCount() == 0 || board.getWoodCount() == 0;
+		if(over)
+			Server.sendGameEvent(this, "E_GAME_OVER");
+	}
+	
+	public void setOver(boolean f) {
+		over = f;
+		
 		if(over)
 			Server.sendGameEvent(this, "E_GAME_OVER");
 	}

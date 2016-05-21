@@ -2,6 +2,7 @@ package rs.zx.checkers.server.network;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -62,9 +63,9 @@ public class Server {
 		}
 	}
 	
-	public static Set<String> getGames() {
+	public static Collection<Game> getGames() {
 		synchronized(mutex) {
-			return gameMap.keySet();
+			return gameMap.values();
 		}
 	}
 	
@@ -127,6 +128,9 @@ public class Server {
 						g.leaveGame(p);
 					} catch(GameException e) {}//will not happen
 			}
+			
+			connectionMap.remove(p);
+			Server.broadcastUsers();
 		}
 	}
 	

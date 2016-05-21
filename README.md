@@ -20,7 +20,9 @@ Komande
 #####Send a message to lobby
 	> LOBBYMSG: <message>
 #####Move a figure in a game room
-	> MOVE: <from_x> <from_y> <to_x> <to_y> <eaten>
+	> MOVE: <from_x> <from_y> <to_x> <to_y>
+#####Eat a figure
+	> EAT: <x> <y>
 #####Reply to a ping
 	> PONG
 #####End your turn
@@ -56,6 +58,10 @@ Povratne vrednosti
 	Nova poruka od igrača username.
 #####E_INFO: message
 	Informativna poruka.
+#####E_MOVE: fx fy tx ty
+	Pomeri figuru sa polja fx, fy na tx, ty.
+#####E_EAT: x y
+	Figura na x, y je pojedena.
 #####E_LOBBY_MESSAGE: username message
 	Nova poruka od igrača username u lobby-u.
 #####E_LOBBY_INFO: message
@@ -80,6 +86,8 @@ Povratne vrednosti
 	Lista svih dostupnih komandi.
 #####E_USERS: users
 	Lista svih konektovanih korisnika.
+#####E_GAMES: user1 user2
+	Lista svih trenutnih igara.
 #####E_STATE: state
 	Serijalizovan objekat sa trenutnim stanjem igre u Base64 formatu.
 #####PING

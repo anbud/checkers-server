@@ -149,6 +149,7 @@ public enum Command {
 			if(con.getPlayer() != null) {
 				Game g = Server.getPlayerGame(con.getPlayer());
 				Server.sendGameEvent(g, "E_WON", con.getPlayer().getName());
+				Server.sendGameEvent(g, "E_GAME_OVER");
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}
@@ -160,6 +161,7 @@ public enum Command {
 			if(con.getPlayer() != null) {
 				Game g = Server.getPlayerGame(con.getPlayer());
 				Server.sendGameEvent(g, "E_DRAW");
+				Server.sendGameEvent(g, "E_GAME_OVER");
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}

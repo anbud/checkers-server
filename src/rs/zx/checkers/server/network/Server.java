@@ -136,6 +136,7 @@ public class Server {
 			}
 			
 			connectionMap.remove(p);
+			allConnections.remove(p);
 			Server.broadcastUsers();
 		}
 	}

@@ -1,6 +1,7 @@
 package rs.zx.checkers.server.network;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
@@ -73,7 +74,10 @@ public class Connection implements Runnable {
 					queue.add("PING");
 				
 				if(System.currentTimeMillis()-getLastPingTime() >= 14000) {
-					//nothing
+					try {
+						socket.close();
+					} catch (IOException e) {
+					}
 				} else {				
 					setLastPingTime(System.currentTimeMillis());
 				}
@@ -112,7 +116,6 @@ public class Connection implements Runnable {
 				process(line);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 			try {
 				socket.close();
 			} catch (Exception e1) {}
@@ -164,9 +167,5 @@ public class Connection implements Runnable {
 	public void sendMessage(String s) {
 		if(queue != null)
 			queue.add(s);
-	}
-	
-	public void close() {
-		
 	}
 }

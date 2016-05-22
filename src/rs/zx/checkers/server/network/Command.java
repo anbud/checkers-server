@@ -10,16 +10,20 @@ public enum Command {
 	LOGIN(1) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
-			if(Server.availableName(arguments[0])) {
-				Player p = new Player(Utils.randomId(6), arguments[0]);
-
-				Server.assignConnection(p, con);
-
-				con.sendMessage("E_OK");
-				
-				Server.broadcastUsers();
+			if(con.getPlayer() == null) {
+				if(Server.availableName(arguments[0])) {
+					Player p = new Player(Utils.randomId(6), arguments[0]);
+	
+					Server.assignConnection(p, con);
+	
+					con.sendMessage("E_OK");
+					
+					Server.broadcastUsers();
+				} else {
+					con.sendMessage("E_USERNAME_TAKEN");
+				}
 			} else {
-				con.sendMessage("E_USERNAME_TAKEN");
+				con.sendMessage("E_ALREADY_LOGGED_IN");
 			}
 		}			
 	},

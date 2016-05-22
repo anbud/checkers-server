@@ -59,21 +59,21 @@ public class Game implements Serializable {
 			Server.sendMessage(null, this, "Game has started.");
 			Server.sendGameEvent(this, "E_GAME_STARTED");
 			
+			Server.sendGameEvent(this, "E_TURN", currentPlayer.getName());
+			
 			Server.broadcastGames();
 		}
 	}
 	
 	public void leaveGame(Player p) throws GameException {
-		if(players.contains(p)) {
-			over = true;
+		over = true;
 			
-			players.remove(p);
+		players.remove(p);
 		
-			Server.sendMessage(null, this, p.getName() + " has left the game room!");
-			Server.sendGameEvent(this, "E_GAME_OVER");
+		Server.sendMessage(null, this, p.getName() + " has left the game room!");
+		Server.sendGameEvent(this, "E_GAME_OVER");
 			
-			Server.broadcastUsers();
-		}
+		Server.broadcastUsers();
 	}
 	
 	public void playMove(int fx, int fy, int tx, int ty, int... et) {

@@ -1,14 +1,14 @@
 Checkers Server
 =============
 
-_Live instance running at hekate.zx.rs:1338_
+_Live instance running at hekate.zx.rs:110_
 
 Komande
 ----------------
 #####Login
 	> LOGIN: <username>
 #####Leave game
-	> LEAVE GAME: <game_id>
+	> LEAVE GAME
 #####Send a game request
 	> GAME REQUEST: <username>
 #####Accept a game request
@@ -33,6 +33,8 @@ Komande
 	> FREE USERS
 #####Print all active game
 	> GAMES
+#####Print all requests
+	> REQUESTS
 #####Print all commands
 	> HELP
 
@@ -48,6 +50,8 @@ Povratne vrednosti
 	Zbog pravila igre, potez je bio nelegalan.
 #####E_USERNAME_TAKEN
 	Odabrano korisničko ime je već zauzeto.
+#####E_ALREADY_LOGGED_IN
+	Korisnik je već ulogovan.
 #####E_GAME_FULL
 	Igra već ima dva igrača i nema mesta za dodatne igrače.
 #####E_NO_PLAYER
@@ -86,9 +90,9 @@ Povratne vrednosti
 	Lista svih dostupnih komandi.
 #####E_USERS: users
 	Lista svih konektovanih korisnika.
+#####E_REQUESTS: requests
+	Lista svih request-ova za igru.
 #####E_GAMES: user1 user2
 	Lista svih trenutnih igara.
-#####E_STATE: state
-	Serijalizovan objekat sa trenutnim stanjem igre u Base64 formatu.
 #####PING
 	PING poruka. Zahteva odgovor sa PONG komandom.

@@ -54,9 +54,7 @@ public class Game implements Serializable {
 		} else
 			throw new GameException("Game " + identifier + " has no room for more players!");
 		
-		if(players.size() == 2) {	
-			Server.sendGameEvent(this, "E_TURN", currentPlayer.getName());
-			
+		if(players.size() == 2) {				
 			Server.broadcastGames();
 		}
 	}

@@ -74,6 +74,8 @@ public enum Command {
 					Server.sendMessage(null, g, con.getPlayer().getName() + " has joined the game room!");
 					Server.sendMessage(null, g, "Game has started.");
 					
+					Server.sendGameEvent(g, "E_TURN", g.getCurrentPlayer().getName());
+					
 					Command.valueOf("REQUESTS").run(c);
 					
 					c.sendMessage("E_GAME_ACCEPTED: " + con.getPlayer().getName());

@@ -17,6 +17,16 @@ public class Game implements Serializable {
 	private Player currentPlayer;
 	private boolean over;
 	
+	private int move;
+	
+	public void setMove(int move) {
+		this.move = move;
+	}
+	
+	public int getMove() {
+		return move;
+	}
+	
 	public Game(String identifier) {
 		this.identifier = identifier;
 	}

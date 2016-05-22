@@ -57,6 +57,10 @@ public class Connection implements Runnable {
 		reqs.remove(p);
 	}
 	
+	public void removeRequests() {
+		reqs.clear();
+	}
+	
 	public LinkedList<Player> getReqs() {
 		return reqs;
 	}

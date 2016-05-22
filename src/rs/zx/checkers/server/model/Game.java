@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import rs.zx.checkers.server.exceptions.GameException;
+import rs.zx.checkers.server.network.Command;
+import rs.zx.checkers.server.network.Connection;
 import rs.zx.checkers.server.network.Server;
 
 public class Game implements Serializable {
@@ -44,12 +46,15 @@ public class Game implements Serializable {
 		currentPlayer = players.get(0) == currentPlayer ? players.get(1) : players.get(0);
 	}
 	
-	public void joinGame(Player p) throws GameException {
+	public void joinGame(Player p) throws Exception {
 		if(players.size() == 0)
 			currentPlayer = p;
 		
 		if(players.size() < 2) {
 			players.add(p);
+			Connection c = Server.getConnection(p);
+			c.removeRequests();
+			Command.valueOf("REQUESTS").run(c);
 			Server.broadcastUsers();
 		} else
 			throw new GameException("Game " + identifier + " has no room for more players!");
@@ -85,7 +90,7 @@ public class Game implements Serializable {
 	}
 	
 	public void checkState() {
-		over = board.getRedCount() == 0 || board.getWoodCount() == 0;
+		//over = board.getRedCount() == 0 || board.getWoodCount() == 0;
 		if(over)
 			Server.sendGameEvent(this, "E_GAME_OVER");
 	}

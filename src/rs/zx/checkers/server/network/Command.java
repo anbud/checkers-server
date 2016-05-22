@@ -65,6 +65,8 @@ public enum Command {
 				
 					Server.newGame(id, g);
 					
+					Server.sendGameEvent(g, "E_GAME_STARTED");
+					
 					g.joinGame(p);
 					g.joinGame(con.getPlayer());
 					

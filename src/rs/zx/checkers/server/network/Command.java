@@ -143,12 +143,12 @@ public enum Command {
 			}
 		}
 	},
-	LOST(0) {
+	WON(0) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {	 	
 			if(con.getPlayer() != null) {
 				Game g = Server.getPlayerGame(con.getPlayer());
-				Server.sendGameEvent(g, "E_LOST", con.getPlayer().getName());
+				Server.sendGameEvent(g, "E_WON", con.getPlayer().getName());
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}

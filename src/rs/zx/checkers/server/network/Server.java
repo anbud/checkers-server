@@ -34,6 +34,7 @@ public class Server {
 			
 			try {
 				Command.valueOf("FREE_USERS").run(con);
+				Command.valueOf("GAMES").run(con);
 			} catch (Exception e2) {
 			}
 		}

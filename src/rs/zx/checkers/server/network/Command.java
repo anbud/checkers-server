@@ -106,10 +106,12 @@ public enum Command {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {	 	
 			if(con.getPlayer() != null) {
-				con.sendMessage("E_REQUESTS:");
+				StringBuilder command = new StringBuilder("E_REQUESTS:\r\n");
 				for(Player p : con.getReqs())
-					con.sendMessage(p.getName());
-				con.sendMessage("E_END");
+					command.append(p.getName()+"\r\n");
+				command.append("E_END");
+				
+				con.sendMessage(command.toString());
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}
@@ -256,23 +258,27 @@ public enum Command {
 	USERS(0) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
-			con.sendMessage("E_USERS:");
+			StringBuilder command = new StringBuilder("E_USERS:\r\n");
 			Server.getPlayers().stream().forEach(i -> {
-				con.sendMessage(i.getName());
+				command.append(i.getName()+"\r\n");
 			});
-			con.sendMessage("E_END");
+			command.append("E_END");
+			
+			con.sendMessage(command.toString());
 		}		 
 	},
 	FREE_USERS(0) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
-			con.sendMessage("E_USERS:");
+			StringBuilder command = new StringBuilder("E_USERS:\r\n");
 			Server.getPlayers().stream().filter(i -> {
 				return Server.getPlayerGame(i) == null;
 			}).forEach(i -> {
-				con.sendMessage(i.getName());
+				command.append(i.getName()+"\r\n");
 			});	
-			con.sendMessage("E_END");
+			command.append("E_END");
+			
+			con.sendMessage(command.toString());
 		}		 
 	},
 	GAMES(0) {

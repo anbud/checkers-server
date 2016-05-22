@@ -238,6 +238,7 @@ public enum Command {
 			Server.getPlayers().stream().forEach(i -> {
 				con.sendMessage(i.getName());
 			});
+			con.sendMessage("E_END");
 		}		 
 	},
 	FREE_USERS(0) {
@@ -248,7 +249,8 @@ public enum Command {
 				return Server.getPlayerGame(i) == null;
 			}).forEach(i -> {
 				con.sendMessage(i.getName());
-			});			
+			});	
+			con.sendMessage("E_END");
 		}		 
 	},
 	GAMES(0) {
@@ -259,6 +261,7 @@ public enum Command {
 				ArrayList<Player> p = i.getPlayers();
 				con.sendMessage(p.get(0).getName() + " " + p.get(1).getName());
 			});
+			con.sendMessage("E_END");
 		}		 
 	},
 	GAME_OVER(0) {
@@ -266,7 +269,6 @@ public enum Command {
 		public void run(Connection con, String... arguments) throws Exception {
 			if(con.getPlayer() != null) {
 				Game g = Server.getPlayerGame(con.getPlayer());
-				Player p = con.getPlayer();
 				 
 				if(g != null) {
 					g.setOver(true);				

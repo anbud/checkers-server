@@ -76,11 +76,11 @@ public class Game implements Serializable {
 		Server.broadcastUsers();
 	}
 	
-	public void playMove(int fx, int fy, int tx, int ty, int... et) {
-		Field nf = board.getXY(fx, fy).clone();
+	public void playMove(int fx, int fy) {
+		/*Field nf = board.getXY(fx, fy).clone();
 		
 		board.setXY(tx, ty, nf);
-		board.getXY(fx, fy).setFigure(null);
+		board.getXY(fx, fy).setFigure(null);*/
 		
 		checkState();
 	}

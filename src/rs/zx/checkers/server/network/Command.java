@@ -194,7 +194,7 @@ public enum Command {
 			}
 		}
 	},
-	MOVE(4) {
+	MOVE(2) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
 			if(con.getPlayer() != null) {
@@ -204,7 +204,7 @@ public enum Command {
 				if(g != null) {
 					if(g.getCurrentPlayer() == p) {						
 						try {
-							g.playMove(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]), Integer.parseInt(arguments[2]), Integer.parseInt(arguments[3]));
+							g.playMove(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
 							
 							Server.sendGameEvent(g, "E_MOVE", arguments);
 							

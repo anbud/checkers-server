@@ -278,12 +278,14 @@ public enum Command {
 	GAMES(0) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
-			con.sendMessage("E_GAMES:");
+			StringBuilder command = new StringBuilder("E_GAMES:\r\n");
 			Server.getGames().stream().forEach(i -> {
 				ArrayList<Player> p = i.getPlayers();
-				con.sendMessage(p.get(0).getName() + " " + p.get(1).getName());
+				command.append(p.get(0).getName() + " " + p.get(1).getName()+"\r\n");
 			});
-			con.sendMessage("E_END");
+			command.append("E_END");
+			
+			con.sendMessage(command.toString());
 		}		 
 	},
 	GAME_OVER(0) {

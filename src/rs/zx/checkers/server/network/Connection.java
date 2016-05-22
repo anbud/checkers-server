@@ -76,6 +76,7 @@ public class Connection implements Runnable {
 	public void run() {
 		queue.add("Welcome to " + Server.serverName + " " + Server.version + ". Please LOGIN first or type HELP for all commands.");
 		Server.addConnection(this);
+		
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {

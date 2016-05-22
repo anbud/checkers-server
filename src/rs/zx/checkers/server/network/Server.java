@@ -31,6 +31,11 @@ public class Server {
 	public static void addConnection(Connection con) {
 		synchronized(mutex) {
 			allConnections.add(con);
+			
+			try {
+				Command.valueOf("FREE_USERS").run(con);
+			} catch (Exception e2) {
+			}
 		}
 	}
 	

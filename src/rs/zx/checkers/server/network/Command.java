@@ -117,11 +117,11 @@ public enum Command {
 			}
 		}
 	},
-	LEAVE_GAME(1) {
+	LEAVE_GAME(0) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {	 	
 			if(con.getPlayer() != null) {
-				Server.getGame(arguments[0]).leaveGame(con.getPlayer());
+				Server.getPlayerGame(con.getPlayer()).leaveGame(con.getPlayer());
 			
 				con.sendMessage("E_OK");
 				

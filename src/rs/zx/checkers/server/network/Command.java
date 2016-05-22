@@ -323,7 +323,8 @@ public enum Command {
 			StringBuilder command = new StringBuilder("E_GAMES:\r\n");
 			Server.getGames().stream().forEach(i -> {
 				ArrayList<Player> p = i.getPlayers();
-				command.append(p.get(0).getName() + " " + p.get(1).getName()+"\r\n");
+				if(p.size() == 2)
+					command.append(p.get(0).getName() + " " + p.get(1).getName()+"\r\n");
 			});
 			command.append("E_END");
 			

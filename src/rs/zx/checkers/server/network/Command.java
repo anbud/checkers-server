@@ -143,6 +143,28 @@ public enum Command {
 			}
 		}
 	},
+	LOST(0) {
+		@Override
+		public void run(Connection con, String... arguments) throws Exception {	 	
+			if(con.getPlayer() != null) {
+				Game g = Server.getPlayerGame(con.getPlayer());
+				Server.sendGameEvent(g, "E_LOST", con.getPlayer().getName());
+			} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
+		}
+	},
+	DRAW(0) {
+		@Override
+		public void run(Connection con, String... arguments) throws Exception {	 	
+			if(con.getPlayer() != null) {
+				Game g = Server.getPlayerGame(con.getPlayer());
+				Server.sendGameEvent(g, "E_DRAW");
+			} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
+		}
+	},
 	GAMEMSG(1) {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {

@@ -35,13 +35,17 @@ public enum Command {
 				
 				if(p != null) {
 					Connection c = Server.getConnection(p);
-					c.sendMessage("E_GAME_REQUEST: " + con.getPlayer().getName());
-					
-					c.addRequest(con.getPlayer());
-					
-					Command.valueOf("REQUESTS").run(c);
-					
-					con.sendMessage("E_OK");
+					if(!c.getReqs().contains(con.getPlayer())) {
+						c.sendMessage("E_GAME_REQUEST: " + con.getPlayer().getName());
+						
+						c.addRequest(con.getPlayer());
+						
+						Command.valueOf("REQUESTS").run(c);
+						
+						con.sendMessage("E_OK");
+					} else {
+						con.sendMessage("E_MULTIPLE_REQUESTS");
+					}
 				} else {
 					con.sendMessage("E_NO_PLAYER");
 				}

@@ -202,7 +202,7 @@ public enum Command {
 				Player p = con.getPlayer();
 				 
 				if(g != null) {
-					if(g.getCurrentPlayer() == p) {						
+					//if(g.getCurrentPlayer() == p) {						
 						try {
 							g.playMove(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
 							
@@ -215,8 +215,8 @@ public enum Command {
 						}
 
 						con.sendMessage("E_OK");
-					} else 
-						con.sendMessage("E_INVALID_MOVE");					
+					//} else 
+						//con.sendMessage("E_INVALID_MOVE");					
 				} else 
 					con.sendMessage("E_NO_GAME");				
 			} else

@@ -315,21 +315,6 @@ public enum Command {
 			} else
 				con.sendMessage("E_NO_PLAYER");
 		}		 
-	},
-	STATE(1) {
-		@Override
-		public void run(Connection con, String... arguments) throws Exception {
-			if(con.getPlayer() != null) {
-				Game g = Server.getGame(arguments[0]);
-				 
-				if(g != null) {
-					con.sendMessage("E_STATE:");
-					con.sendMessage(Utils.toString(g));
-				} else 
-					con.sendMessage("E_NO_GAME");				
-			} else
-				con.sendMessage("E_NO_PLAYER");
-		}
 	};
 
 	private int argumentCount;

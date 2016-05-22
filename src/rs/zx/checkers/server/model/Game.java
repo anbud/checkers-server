@@ -90,9 +90,10 @@ public class Game implements Serializable {
 	}
 	
 	public void checkState() {
-		//over = board.getRedCount() == 0 || board.getWoodCount() == 0;
-		if(over)
+		if(over) {
 			Server.sendGameEvent(this, "E_GAME_OVER");
+			Server.broadcastGames();
+		}
 	}
 	
 	public void setOver(boolean f) {

@@ -66,7 +66,8 @@ public class Game implements Serializable {
 		
 		Server.sendMessage(null, this, p.getName() + " has left the game room!");
 		Server.sendGameEvent(this, "E_GAME_OVER");
-			
+		
+		Server.broadcastGames();
 		Server.broadcastUsers();
 	}
 	
@@ -92,8 +93,10 @@ public class Game implements Serializable {
 	public void setOver(boolean f) {
 		over = f;
 		
-		if(over)
+		if(over) {
 			Server.sendGameEvent(this, "E_GAME_OVER");
+			Server.broadcastGames();
+		}
 	}
 	
 	public boolean isOver() {

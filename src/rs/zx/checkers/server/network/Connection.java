@@ -17,7 +17,8 @@ public class Connection implements Runnable {
 	private Socket socket;
 	private Player player;
 	private double lag;
-	private long ping = System.currentTimeMillis()+15000;
+	private long ping;
+	private boolean alive = true;
 	private LinkedList<Player> reqs = new LinkedList<Player>();
 	
 	public Connection(Socket socket) {
@@ -60,6 +61,14 @@ public class Connection implements Runnable {
 		return reqs;
 	}
 	
+	public void setAlive(boolean a) {
+		alive = a;
+	}
+	
+	public boolean isAlive() {
+		return alive;
+	}
+	
 	private LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 	private Timer timer = new Timer();
 	
@@ -73,13 +82,14 @@ public class Connection implements Runnable {
 				if(queue != null)
 					queue.add("PING");
 				
-				if(System.currentTimeMillis()-getLastPingTime() >= 14000) {
+				if(!isAlive()) {
 					try {
 						socket.close();
 					} catch (IOException e) {
 					}
 				} else {				
 					setLastPingTime(System.currentTimeMillis());
+					setAlive(false);
 				}
 			}
 		}, 15000, 15000);

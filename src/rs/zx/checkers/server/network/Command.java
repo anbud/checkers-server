@@ -242,6 +242,7 @@ public enum Command {
 		@Override
 		public void run(Connection con, String... arguments) throws Exception {
 			con.setLag((System.currentTimeMillis()-con.getLastPingTime())/1000.0);
+			con.setAlive(true);
 			con.sendMessage("E_LAG: " + con.getLag());
 		} 
 	},

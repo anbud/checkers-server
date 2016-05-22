@@ -205,7 +205,7 @@ public enum Command {
 				 
 				if(g != null) {
 					//if(g.getCurrentPlayer() == p) {
-						g.setMove(g.getMove()+1);
+						//g.setMove(g.getMove()+1);
 						try {
 							g.playMove(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
 							
@@ -263,10 +263,10 @@ public enum Command {
 				Player p = con.getPlayer();
 				 
 				if(g != null) {
-					if(g.getCurrentPlayer() == p && g.getMove() > 0) {
+					if(g.getCurrentPlayer() == p/* && g.getMove() > 0*/) {
 						g.changePlayer();
 						
-						g.setMove(0);
+						//g.setMove(0);
 						
 						Server.sendGameEvent(g, "E_TURN", g.getCurrentPlayer().getName());
 
@@ -326,8 +326,7 @@ public enum Command {
 			StringBuilder command = new StringBuilder("E_GAMES:\r\n");
 			Server.getGames().stream().forEach(i -> {
 				ArrayList<Player> p = i.getPlayers();
-				if(p.size() == 2)
-					command.append(p.get(0).getName() + " " + p.get(1).getName()+"\r\n");
+				command.append(p.get(0).getName() + " " + p.get(1).getName()+"\r\n");
 			});
 			command.append("E_END");
 			

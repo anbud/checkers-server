@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -15,7 +16,8 @@ public class Connection implements Runnable {
 	private Socket socket;
 	private Player player;
 	private double lag;
-	private long ping;
+	private long ping = System.currentTimeMillis()+15000;
+	private LinkedList<Player> reqs = new LinkedList<Player>();
 	
 	public Connection(Socket socket) {
 		this.socket = socket;
@@ -45,18 +47,36 @@ public class Connection implements Runnable {
 		this.ping = ping;
 	}
 	
+	public void addRequest(Player p) {
+		reqs.add(p);
+	}
+	
+	public void removeRequest(Player p) {
+		reqs.remove(p);
+	}
+	
+	public LinkedList<Player> getReqs() {
+		return reqs;
+	}
+	
 	private LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
 	private Timer timer = new Timer();
 	
 	@Override
 	public void run() {
 		queue.add("Welcome to " + Server.serverName + " " + Server.version + ". Please LOGIN first or type HELP for all commands.");
-		
+		Server.addConnection(this);
 		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
-				queue.add("PING");
-				setLastPingTime(System.currentTimeMillis());
+				if(queue != null)
+					queue.add("PING");
+				
+				if(System.currentTimeMillis()-getLastPingTime() >= 14000) {
+					//nothing
+				} else {				
+					setLastPingTime(System.currentTimeMillis());
+				}
 			}
 		}, 15000, 15000);
 		
@@ -85,9 +105,9 @@ public class Connection implements Runnable {
 			
 			InputStream in = socket.getInputStream();
 			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-			
+				
 			String line;
-			
+				
 			while((line = reader.readLine()) != null)
 				process(line);
 			
@@ -144,5 +164,9 @@ public class Connection implements Runnable {
 	public void sendMessage(String s) {
 		if(queue != null)
 			queue.add(s);
+	}
+	
+	public void close() {
+		
 	}
 }

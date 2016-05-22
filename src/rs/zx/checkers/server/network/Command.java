@@ -37,6 +37,10 @@ public enum Command {
 					Connection c = Server.getConnection(p);
 					c.sendMessage("E_GAME_REQUEST: " + con.getPlayer().getName());
 					
+					c.addRequest(con.getPlayer());
+					
+					Command.valueOf("REQUESTS").run(c);
+					
 					con.sendMessage("E_OK");
 				} else {
 					con.sendMessage("E_NO_PLAYER");
@@ -64,6 +68,8 @@ public enum Command {
 					g.joinGame(p);
 					g.joinGame(con.getPlayer());
 					
+					Command.valueOf("REQUESTS").run(c);
+					
 					c.sendMessage("E_GAME_ACCEPTED: " + con.getPlayer().getName());
 					con.sendMessage("E_OK: " + id);
 					
@@ -85,10 +91,25 @@ public enum Command {
 				if(p != null) {
 					Connection c = Server.getConnection(p);
 					
+					Command.valueOf("REQUESTS").run(c);
+					
 					c.sendMessage("E_GAME_DECLINED: " + con.getPlayer().getName());
 				} else {
 					con.sendMessage("E_NO_PLAYER");
 				}
+			} else {
+				con.sendMessage("E_NO_PLAYER");
+			}
+		}
+	},
+	REQUESTS(0) {
+		@Override
+		public void run(Connection con, String... arguments) throws Exception {	 	
+			if(con.getPlayer() != null) {
+				con.sendMessage("E_REQUESTS:");
+				for(Player p : con.getReqs())
+					con.sendMessage(p.getName());
+				con.sendMessage("E_END");
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}

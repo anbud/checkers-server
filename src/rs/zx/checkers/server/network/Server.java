@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Set;
 
 import rs.zx.checkers.server.exceptions.GameException;
@@ -15,6 +16,7 @@ public class Server {
 	
 	private static HashMap<Player, Connection> connectionMap = new HashMap<Player, Connection>();
 	private static HashMap<String, Game> gameMap = new HashMap<String, Game>();
+	private static LinkedList<Connection> allConnections = new LinkedList<Connection>();
 	
 	public static String serverName = "checkers-server";
 	public static String version = "0.0.5";
@@ -23,6 +25,12 @@ public class Server {
 		synchronized(mutex) {
 			connectionMap.put(player, con);
 			con.setPlayer(player);
+		}
+	}
+	
+	public static void addConnection(Connection con) {
+		synchronized(mutex) {
+			allConnections.add(con);
 		}
 	}
 	
@@ -91,11 +99,9 @@ public class Server {
 	}
 	
 	public static void sendMessage(Player p, String message) {
-		synchronized(mutex) {
-			Set<Player> players = connectionMap.keySet();
-			
-			players.stream().forEach(i -> {
-				getConnection(i).sendMessage((p == null ? "E_LOBBY_INFO: " : "E_LOBBY_MESSAGE: ") + (p != null ? (p.getName() + ": ") : " ") + message);
+		synchronized(mutex) {			
+			allConnections.stream().forEach(i -> {
+				i.sendMessage((p == null ? "E_LOBBY_INFO: " : "E_LOBBY_MESSAGE: ") + (p != null ? (p.getName() + ": ") : " ") + message);
 			});
 		}
 	}
@@ -136,7 +142,7 @@ public class Server {
 	
 	public static void broadcastUsers() {
 		synchronized(mutex) {
-			connectionMap.values().stream().forEach(i -> {
+			allConnections.stream().forEach(i -> {
 				try {
 					Command.valueOf("FREE_USERS").run(i);
 				} catch (Exception e) {}
@@ -146,7 +152,7 @@ public class Server {
 	
 	public static void broadcastGames() {
 		synchronized(mutex) {
-			connectionMap.values().stream().forEach(i -> {
+			allConnections.stream().forEach(i -> {
 				try {
 					Command.valueOf("GAMES").run(i);
 				} catch (Exception e) {}

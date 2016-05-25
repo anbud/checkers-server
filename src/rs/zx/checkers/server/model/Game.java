@@ -83,7 +83,5 @@ public class Game {
 	
 	public void setOver(boolean f) {
 		over = f;
-		
-		checkState();
 	}
 }

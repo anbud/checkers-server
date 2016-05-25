@@ -85,7 +85,7 @@ public class Game {
 		over = f;
                 
                 if(over) {
-                    Server.removeGame(identifier);
+                    //Server.removeGame(identifier);
                     
                     Server.broadcastGames();
                 }

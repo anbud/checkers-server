@@ -58,7 +58,7 @@ public class Game {
 	}
 	
 	public void leaveGame(Player p) {
-		over = true;
+		setOver(true);
 			
 		players.remove(p);
 		
@@ -83,5 +83,11 @@ public class Game {
 	
 	public void setOver(boolean f) {
 		over = f;
+                
+                if(over) {
+                    Server.removeGame(identifier);
+                    
+                    Server.broadcastGames();
+                }
 	}
 }

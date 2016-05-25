@@ -44,6 +44,12 @@ public class Server {
                         gameMap.put(name, game);
 		}
 	}
+        
+        public static void removeGame(String id) {
+            synchronized(mutex) {
+                gameMap.remove(id);
+            }
+        }
 	
 	public static Game getGame(String id) {
 		synchronized(mutex) {

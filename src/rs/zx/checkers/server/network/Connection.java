@@ -19,7 +19,7 @@ public class Connection implements Runnable {
 	private double lag;
 	private long ping;
 	private boolean alive = true;
-	private LinkedList<Player> reqs = new LinkedList<Player>();
+	private final LinkedList<Player> reqs = new LinkedList<>();
 	
 	public Connection(Socket socket) {
 		this.socket = socket;
@@ -73,7 +73,7 @@ public class Connection implements Runnable {
 		return alive;
 	}
 	
-	private LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<String>();
+	private LinkedBlockingQueue<String> queue = new LinkedBlockingQueue<>();
 	private Timer timer = new Timer();
 	
 	@Override
@@ -89,7 +89,8 @@ public class Connection implements Runnable {
 				
 				if(!isAlive()) {
 					try {
-						socket.close();
+                                            //ugly solution, but it works.
+                                            socket.close();
 					} catch (IOException e) {
 					}
 				} else {				
@@ -149,7 +150,7 @@ public class Connection implements Runnable {
 		String[] arguments = new String[0];
 		
 		if(!line.equals("")) {
-			split = line.split(":");
+			split = line.split(":", 2);
 			
 			commandString = split[0];
 			

@@ -102,10 +102,12 @@ public enum Command {
 				
 				if(p != null) {
 					Connection c = Server.getConnection(p);
+                                        
+                                        con.removeRequest(p);
+                                        
+                                        c.sendMessage("E_GAME_DECLINED: " + con.getPlayer().getName());
 					
 					Command.valueOf("REQUESTS").run(c);
-					
-					c.sendMessage("E_GAME_DECLINED: " + con.getPlayer().getName());
 				} else {
 					con.sendMessage("E_NO_PLAYER");
 				}
@@ -136,8 +138,6 @@ public enum Command {
 				Server.getPlayerGame(con.getPlayer()).leaveGame(con.getPlayer());
 			
 				con.sendMessage("E_OK");
-				
-				Server.broadcastGames();
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}
@@ -149,7 +149,8 @@ public enum Command {
 			if(con.getPlayer() != null) {
 				Game g = Server.getPlayerGame(con.getPlayer());
 				Server.sendGameEvent(g, "E_WON", con.getPlayer().getName());
-				Server.sendGameEvent(g, "E_GAME_OVER");
+				
+                                g.setOver(true);
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}
@@ -161,7 +162,8 @@ public enum Command {
 			if(con.getPlayer() != null) {
 				Game g = Server.getPlayerGame(con.getPlayer());
 				Server.sendGameEvent(g, "E_DRAW");
-				Server.sendGameEvent(g, "E_GAME_OVER");
+                                
+				g.setOver(true);
 			} else {
 				con.sendMessage("E_NO_PLAYER");
 			}
@@ -201,54 +203,17 @@ public enum Command {
 		public void run(Connection con, String... arguments) throws Exception {
 			if(con.getPlayer() != null) {
 				Game g = Server.getPlayerGame(con.getPlayer());
-				Player p = con.getPlayer();
-				 
+                                
 				if(g != null) {
-					//if(g.getCurrentPlayer() == p) {
-						//g.setMove(g.getMove()+1);
-						try {
-							g.playMove(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
-							
-							Server.sendGameEvent(g, "E_MOVE", arguments);
-							
-							if(g.isOver())
-								Server.sendMessage(null, g, "Game is over!");
-						} catch(NumberFormatException e) {
-							con.sendMessage("E_INVALID_ARGUMENTS");
-						}
+                                    try {
+                                        Server.sendGameEvent(g, "E_MOVE", arguments);
+                                                      
+                                        g.playMove(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
+                                    } catch(NumberFormatException e) {
+					con.sendMessage("E_INVALID_ARGUMENTS");
+                                    }
 
-						con.sendMessage("E_OK");
-					//} else 
-						//con.sendMessage("E_INVALID_MOVE");					
-				} else 
-					con.sendMessage("E_NO_GAME");				
-			} else
-				con.sendMessage("E_NO_PLAYER");
-		}
-	},
-	EAT(2) {
-		@Override
-		public void run(Connection con, String... arguments) throws Exception {
-			if(con.getPlayer() != null) {
-				Game g = Server.getPlayerGame(con.getPlayer());
-				Player p = con.getPlayer();
-				 
-				if(g != null) {
-					if(g.getCurrentPlayer() == p) {						
-						try {
-							g.playEat(Integer.parseInt(arguments[0]), Integer.parseInt(arguments[1]));
-							
-							Server.sendGameEvent(g, "E_EAT", arguments);
-							
-							if(g.isOver())
-								Server.sendMessage(null, g, "Game is over!");
-						} catch(NumberFormatException e) {
-							con.sendMessage("E_INVALID_ARGUMENTS");
-						}
-
-						con.sendMessage("E_OK");
-					} else 
-						con.sendMessage("E_INVALID_MOVE");					
+                                    con.sendMessage("E_OK");				
 				} else 
 					con.sendMessage("E_NO_GAME");				
 			} else
@@ -263,10 +228,8 @@ public enum Command {
 				Player p = con.getPlayer();
 				 
 				if(g != null) {
-					if(g.getCurrentPlayer() == p/* && g.getMove() > 0*/) {
+					if(g.getCurrentPlayer() == p) {
 						g.changePlayer();
-						
-						//g.setMove(0);
 						
 						Server.sendGameEvent(g, "E_TURN", g.getCurrentPlayer().getName());
 
@@ -340,9 +303,9 @@ public enum Command {
 			if(con.getPlayer() != null) {
 				Game g = Server.getPlayerGame(con.getPlayer());
 				 
-				if(g != null) {
+				if(g != null)
 					g.setOver(true);				
-				} else 
+				else 
 					con.sendMessage("E_NO_GAME");				
 			} else
 				con.sendMessage("E_NO_PLAYER");

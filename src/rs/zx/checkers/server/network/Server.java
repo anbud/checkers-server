@@ -7,19 +7,19 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 
-import rs.zx.checkers.server.exceptions.GameException;
 import rs.zx.checkers.server.model.Game;
 import rs.zx.checkers.server.model.Player;
 
 public class Server {
 	public static final Object mutex = new Object();
 	
-	private static HashMap<Player, Connection> connectionMap = new HashMap<Player, Connection>();
-	private static HashMap<String, Game> gameMap = new HashMap<String, Game>();
-	private static LinkedList<Connection> allConnections = new LinkedList<Connection>();
+	private static final HashMap<Player, Connection> connectionMap = new HashMap<>();
+	private static final HashMap<String, Game> gameMap = new HashMap<>();
+        
+	private static final LinkedList<Connection> allConnections = new LinkedList<>();
 	
-	public static String serverName = "checkers-server";
-	public static String version = "0.0.5";
+	public static final String serverName = "checkers-server";
+	public static final String version = "0.9.2";
 	
 	public static void assignConnection(Player player, Connection con) {
 		synchronized(mutex) {
@@ -33,16 +33,15 @@ public class Server {
 			allConnections.add(con);
 			
 			try {
-				Command.valueOf("FREE_USERS").run(con);
-				Command.valueOf("GAMES").run(con);
-			} catch (Exception e2) {
-			}
+                            Command.valueOf("FREE_USERS").run(con);
+                            Command.valueOf("GAMES").run(con);
+			} catch (Exception e) {}
 		}
 	}
 	
 	public static void newGame(String name, Game game) {
 		synchronized(mutex) {
-			gameMap.put(name, game);
+                        gameMap.put(name, game);
 		}
 	}
 	
@@ -70,10 +69,7 @@ public class Server {
 				return i.getName().equalsIgnoreCase(name);
 			}).toArray(Player[]::new);
 			
-			if(p.length > 0)
-				return p[0];
-			else
-				return null;
+			return p.length > 0 ? p[0] : null;
 		}
 	}
 	
@@ -86,10 +82,7 @@ public class Server {
 	public static boolean availableName(String name) {
 		synchronized(mutex) {
 			return !connectionMap.keySet().stream().anyMatch(p -> {
-				if(p.getName().equalsIgnoreCase(name))
-					return true;
-				
-				return false;
+				return p.getName().equalsIgnoreCase(name);
 			});
 		}
 	}	
@@ -134,15 +127,13 @@ public class Server {
 	
 	public static void playerLeft(Player p) {
 		synchronized(mutex) {
-			for(Game g : gameMap.values()) {
-				if(g.getPlayers().contains(p))
-					try {
-						g.leaveGame(p);
-					} catch(GameException e) {}//will not happen
-			}
+			Game g = getPlayerGame(p);
+                        
+                        if(g != null)
+                            g.leaveGame(p);
 			
-			connectionMap.remove(p);
-			allConnections.remove(p);
+			allConnections.remove(getConnection(p));
+                        connectionMap.remove(p);
 			Server.broadcastUsers();
 		}
 	}

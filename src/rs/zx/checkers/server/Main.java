@@ -2,7 +2,6 @@ package rs.zx.checkers.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 import rs.zx.checkers.server.network.Connection;
 

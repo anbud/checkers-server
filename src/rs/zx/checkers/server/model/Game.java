@@ -1,31 +1,16 @@
 package rs.zx.checkers.server.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-import rs.zx.checkers.server.exceptions.GameException;
 import rs.zx.checkers.server.network.Command;
 import rs.zx.checkers.server.network.Connection;
 import rs.zx.checkers.server.network.Server;
 
-public class Game implements Serializable {
-	private static final long serialVersionUID = -8027592139480577678L;
-	
+public class Game {
 	private String identifier;
-	private ArrayList<Player> players = new ArrayList<Player>();
-	private Board board = new Board();
+	private ArrayList<Player> players = new ArrayList<>();
 	private Player currentPlayer;
 	private boolean over;
-	
-	private int move;
-	
-	public void setMove(int move) {
-		this.move = move;
-	}
-	
-	public int getMove() {
-		return move;
-	}
 	
 	public Game(String identifier) {
 		this.identifier = identifier;
@@ -37,21 +22,18 @@ public class Game implements Serializable {
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
 	}
+        
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
 	public void setPlayers(ArrayList<Player> players) {
 		this.players = players;
 	}
-	public Board getBoard() {
-		return board;
-	}
-	public void setBoard(Board board) {
-		this.board = board;
-	}
+        
 	public Player getCurrentPlayer() {
 		return currentPlayer;
 	}
+        
 	public void changePlayer() {
 		currentPlayer = players.get(0) == currentPlayer ? players.get(1) : players.get(0);
 	}
@@ -62,19 +44,20 @@ public class Game implements Serializable {
 		
 		if(players.size() < 2) {
 			players.add(p);
+                        
 			Connection c = Server.getConnection(p);
 			c.removeRequests();
+                        
 			Command.valueOf("REQUESTS").run(c);
+                        
 			Server.broadcastUsers();
-		} else
-			throw new GameException("Game " + identifier + " has no room for more players!");
-		
-		if(players.size() == 2) {				
-			Server.broadcastGames();
 		}
+                
+		if(players.size() == 2) 			
+			Server.broadcastGames();
 	}
 	
-	public void leaveGame(Player p) throws GameException {
+	public void leaveGame(Player p) {
 		over = true;
 			
 		players.remove(p);
@@ -82,26 +65,18 @@ public class Game implements Serializable {
 		Server.sendMessage(null, this, p.getName() + " has left the game room!");
 		Server.sendGameEvent(this, "E_GAME_OVER");
 		
+                Server.broadcastUsers();
 		Server.broadcastGames();
-		Server.broadcastUsers();
 	}
 	
 	public void playMove(int fx, int fy) {
-		/*Field nf = board.getXY(fx, fy).clone();
-		
-		board.setXY(tx, ty, nf);
-		board.getXY(fx, fy).setFigure(null);*/
-		
 		checkState();
-	}
-	
-	public void playEat(int x, int y) {
-		board.getXY(x, y).setFigure(null);
 	}
 	
 	public void checkState() {
 		if(over) {
 			Server.sendGameEvent(this, "E_GAME_OVER");
+                        Server.sendMessage(null, this, "Game is over!");
 			Server.broadcastGames();
 		}
 	}
@@ -109,13 +84,6 @@ public class Game implements Serializable {
 	public void setOver(boolean f) {
 		over = f;
 		
-		if(over) {
-			Server.sendGameEvent(this, "E_GAME_OVER");
-			Server.broadcastGames();
-		}
-	}
-	
-	public boolean isOver() {
-		return over;
+		checkState();
 	}
 }

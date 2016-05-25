@@ -1,10 +1,6 @@
 package rs.zx.checkers.server.model;
 
-import java.io.Serializable;
-
-public class Player implements Serializable {
-	private static final long serialVersionUID = 231122823906651732L;
-	
+public class Player {
 	private String id;
 	private String name;
 	
@@ -29,6 +25,7 @@ public class Player implements Serializable {
 		this.name = name;
 	}
 	
+        @Override
 	public String toString() {
 		return name;
 	}

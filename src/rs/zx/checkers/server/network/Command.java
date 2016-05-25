@@ -107,7 +107,7 @@ public enum Command {
                                         
                                         c.sendMessage("E_GAME_DECLINED: " + con.getPlayer().getName());
 					
-					Command.valueOf("REQUESTS").run(c);
+					Command.valueOf("REQUESTS").run(con);
 				} else {
 					con.sendMessage("E_NO_PLAYER");
 				}
